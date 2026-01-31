@@ -23,7 +23,7 @@ const urlController = {
                 data: {
                     shortCode: url.shortCode,
                     longUrl: url.longUrl,
-                    shortUrl: `${baseUrl}/${url.shortCode}`,
+                    shortUrl: `${process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`}/${url.shortCode}`,
                     createdAt: url.createdAt
                 }
             });
