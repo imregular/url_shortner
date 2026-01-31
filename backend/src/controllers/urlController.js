@@ -15,12 +15,15 @@ const urlController = {
 
             const url = await urlService.createShortUrl(longUrl, customCode);
 
+            // Use BASE_URL for production, fallback to localhost for dev
+            const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+
             res.status(201).json({
                 success: true,
                 data: {
                     shortCode: url.shortCode,
                     longUrl: url.longUrl,
-                    shortUrl: `http://localhost:${process.env.PORT || 5000}/${url.shortCode}`,
+                    shortUrl: `${baseUrl}/${url.shortCode}`,
                     createdAt: url.createdAt
                 }
             });
