@@ -12,11 +12,39 @@ const prisma = require('./config/database');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Security headers
-app.use(helmet());
-
 // Trust proxy (needed for Railway/Render/Cloudflare)
 app.set('trust proxy', 1);
+
+// Allowed origins for CORS
+const allowedOrigins = [
+    'https://url-shortner-delta-three.vercel.app',
+    ...(process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',') : []),
+    'http://localhost:5173',
+    'http://localhost:3000',
+].filter(Boolean);
+
+// Debug log (remove after confirming it works)
+console.log('Allowed CORS origins:', allowedOrigins);
+
+// CORS - MUST be before other middleware
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log('CORS blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'OPTIONS'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Security headers
+app.use(helmet());
 
 // Rate limiting
 const limiter = rateLimit({
@@ -32,13 +60,6 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     app.use(morgan('dev'));
 }
-
-// Middleware
-app.use(cors({
-    origin: process.env.FRONTEND_URL?.split(',') || 'http://localhost:5173',
-    methods: ['GET', 'POST'],
-    credentials: true
-}));
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 
