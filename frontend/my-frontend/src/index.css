@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-black via-slate-900 to-blue-950 min-h-screen text-white;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-blue-500/20;
+  }
+
+  .glass-hover {
+    @apply hover:bg-white/10 hover:border-blue-400/30 transition-all duration-300;
+  }
+}
