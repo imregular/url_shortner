@@ -1,33 +1,22 @@
 {
-  "name": "backend",
+  "name": "url-shortner-worker",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "build": "prisma generate && prisma migrate deploy",
-    "postinstall": "prisma generate"
+    "dev": "wrangler dev --local --persist-to .wrangler/state",
+    "deploy": "wrangler deploy",
+    "d1:migrate:local": "wrangler d1 migrations apply url-shortner-db --local",
+    "d1:migrate:remote": "wrangler d1 migrations apply url-shortner-db --remote"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.22.0",
-    "@prisma/extension-accelerate": "^3.0.1",
-    "cors": "^2.8.6",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "express-rate-limit": "^8.2.1",
-    "helmet": "^8.1.0",
-    "morgan": "^1.10.1",
-    "nanoid": "^5.1.6",
-    "redis": "^5.10.0",
-    "validator": "^13.15.26"
+    "hono": "^4.7.7"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11",
-    "prisma": "^5.22.0"
+    "wrangler": "^4.11.1"
   }
 }
